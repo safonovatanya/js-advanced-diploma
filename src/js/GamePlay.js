@@ -1,8 +1,9 @@
 import { calcHealthLevel, calcTileType } from './utils';
+import { GlobalRules } from './GameSetup';
 
 export default class GamePlay {
   constructor() {
-    this.boardSize = 8;
+    this.boardSize = GlobalRules.boardSize;
     this.container = null;
     this.boardEl = null;
     this.cells = [];
@@ -56,7 +57,7 @@ export default class GamePlay {
       cellEl.classList.add('cell', 'map-tile', `map-tile-${calcTileType(i, this.boardSize)}`);
       cellEl.addEventListener('mouseenter', event => this.onCellEnter(event));
       cellEl.addEventListener('mouseleave', event => this.onCellLeave(event));
-      cellEl.addEventListener('click', event => this.onCellClick(event));
+      cellEl.addEventListener('click', (event) => { this.onCellClick(event); /* console.log('click', event) */ });
       this.boardEl.appendChild(cellEl);
     }
 
@@ -149,6 +150,7 @@ export default class GamePlay {
     event.preventDefault();
     const index = this.cells.indexOf(event.currentTarget);
     this.cellEnterListeners.forEach(o => o.call(null, index));
+    // console.log(index);
   }
 
   onCellLeave(event) {
@@ -178,10 +180,12 @@ export default class GamePlay {
   }
 
   static showError(message) {
+    // eslint-disable-next-line no-alert
     alert(message);
   }
 
   static showMessage(message) {
+    // eslint-disable-next-line no-alert
     alert(message);
   }
 
@@ -203,7 +207,7 @@ export default class GamePlay {
   hideCellTooltip(index) {
     this.cells[index].title = '';
   }
-  
+
   showDamage(index, damage) {
     return new Promise((resolve) => {
       const cell = this.cells[index];
